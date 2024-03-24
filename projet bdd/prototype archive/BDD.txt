@@ -1,0 +1,78 @@
+    ---------- TABLES ----------
+
+CREATE TABLE public.Personnes (
+    id serial NOT NULL UNIQUE,
+    nom varchar,
+    prenom varchar,
+    id_parent1 integer,
+    id_parent2 integer,
+    CONSTRAINT Personnes_pk PRIMARY KEY (id)
+) WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE public.Actes (
+    id serial NOT NULL UNIQUE,
+    Type integer NOT NULL,
+    id_personne1 integer NOT NULL,
+    id_personne2 integer NOT NULL,
+    id_communes integer NOT NULL,
+    date DATE NOT NULL,
+    numVue varchar NOT NULL,
+    CONSTRAINT Actes_pk PRIMARY KEY (id)
+) WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE public.Communes (
+    id serial NOT NULL,
+    nom varchar NOT NULL,
+    id_departement integer NOT NULL,
+    CONSTRAINT Communes_pk PRIMARY KEY (id)
+) WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE public.Type (
+    id serial NOT NULL,
+    signification varchar NOT NULL,
+    CONSTRAINT Type_pk PRIMARY KEY (id)
+) WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE public.Departement (
+    id integer NOT NULL,
+    CONSTRAINT Departement_pk PRIMARY KEY (id)
+) WITH (
+  OIDS=FALSE
+);
+
+    ---------- RULES ----------
+
+ALTER TABLE Personnes ADD CONSTRAINT Personnes_fk0 FOREIGN KEY (id_parent1) REFERENCES Personnes(id);
+ALTER TABLE Personnes ADD CONSTRAINT Personnes_fk1 FOREIGN KEY (id_parent2) REFERENCES Personnes(id);
+
+ALTER TABLE Actes ADD CONSTRAINT Actes_fk0 FOREIGN KEY (Type) REFERENCES Type(id);
+ALTER TABLE Actes ADD CONSTRAINT Actes_fk1 FOREIGN KEY (id_personne1) REFERENCES Personnes(id);
+ALTER TABLE Actes ADD CONSTRAINT Actes_fk2 FOREIGN KEY (id_personne2) REFERENCES Personnes(id);
+ALTER TABLE Actes ADD CONSTRAINT Actes_fk3 FOREIGN KEY (id_communes) REFERENCES Communes(id);
+
+ALTER TABLE Communes ADD CONSTRAINT Communes_fk0 FOREIGN KEY (id_departement) REFERENCES Departement(id);
+
+    ---------- BASED ----------
+
+INSERT INTO Type VALUES \'Certificat de mariage\'
+
+INSERT INTO Type (signification) VALUES 'Contrat de mariage'
+INSERT INTO Type (signification) VALUES 'Divorce'
+INSERT INTO Type (signification) VALUES 'Mariage'
+INSERT INTO Type (signification) VALUES 'Promesse de mariage - fiançailles'
+INSERT INTO Type (signification) VALUES 'Publication de mariage'
+INSERT INTO Type (signification) VALUES 'Rectification de mariage'
+
+INSERT INTO Departement VALUES '44'
+INSERT INTO Departement VALUES '49'
+INSERT INTO Departement VALUES '79'
+INSERT INTO Departement VALUES '85'
+
